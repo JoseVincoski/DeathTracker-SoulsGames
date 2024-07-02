@@ -28,10 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             tb_AreaName = new TextBox();
             btn_cgAreaName = new Button();
-            ShortcutPoolingTimer = new System.Windows.Forms.Timer(components);
             lbl_AreaDeaths = new Label();
             button1 = new Button();
             button2 = new Button();
@@ -60,12 +58,6 @@
             btn_cgAreaName.Text = "Change Area Name";
             btn_cgAreaName.UseVisualStyleBackColor = true;
             btn_cgAreaName.Click += setAreaName;
-            // 
-            // ShortcutPoolingTimer
-            // 
-            ShortcutPoolingTimer.Enabled = true;
-            ShortcutPoolingTimer.Interval = 16;
-            ShortcutPoolingTimer.Tick += ShortcutPoolingTimerTick;
             // 
             // lbl_AreaDeaths
             // 
@@ -158,7 +150,6 @@
         private Label lblAreaName;
         private TextBox tb_AreaName;
         private Button btn_cgAreaName;
-        private System.Windows.Forms.Timer ShortcutPoolingTimer;
         private Panel panel1;
         private Label lbl_AreaDeaths;
         private Button button1;

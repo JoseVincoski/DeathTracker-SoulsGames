@@ -1,21 +1,20 @@
-using System.Diagnostics;
-using System.Runtime.InteropServices;
+using DeathCounter;
 
 namespace WinFormsApp1
 {
-    public partial class DeathCounter : Form
+    public partial class DeathCounter : ShortcutHandler
     {
         private FileHandler _deathLogFileHandler;
+
         private string filePath = "DeathLog.txt";
 
         private int totalDeathCount = 0;
         private int totalAreaDeathCount = 0;
+        private string selectedArea = string.Empty;
 
         private readonly string REASON_ADDING_DEATH = "Adding Death";
         private readonly string REASON_REMOVING_DEATH = "Removing Death";
         private readonly string REASON_CHANGING_AREA_NAME = "Changing Area";
-
-        private string selectedArea = string.Empty;
 
         public DeathCounter()
         {
@@ -81,48 +80,10 @@ namespace WinFormsApp1
             lbl_totalDeaths.Text = totalDeathCount.ToString();
         }
 
-        private void FocusOnForm()
-        {
-            this.Activate();
-        }
+        public override void OnAddDeathReleased() { AddDeath(); }
 
-        #region ShortcutHelper
-        [DllImport("User32.dll")]
-        private static extern short GetAsyncKeyState(int vKey);
-        private Func<int, bool> isPressed = delegate (int key) { return ((GetAsyncKeyState(key) >> 15) & 0x0001) == 0x0001; };
+        public override void OnRemoveDeathReleased () { RemoveDeath(); }
 
-        private static readonly int VK_PRIOR = 0x21; //This is the page-up key.
-        private static readonly int VK_NEXT = 0x22; //This is the page-down key.
-        private static readonly int VK_HOME = 0x24; //This is the home key.
-
-        bool pgUpWasPressed = false;
-        bool pgDnWasPressed = false;
-        bool homeWasPressed = false;
-
-        private void ShortcutPoolingTimerTick(object sender, EventArgs e)
-        {
-            var isPgUpPressed = isPressed(VK_PRIOR);
-            if (pgUpWasPressed == true && isPgUpPressed == false)
-            {
-                AddDeath();
-            }
-            pgUpWasPressed = isPgUpPressed;
-
-            var isPgDnPressed = isPressed(VK_NEXT);
-            if (pgDnWasPressed == true && isPgDnPressed == false)
-            {
-                RemoveDeath();
-            }
-            pgDnWasPressed = isPgDnPressed;
-
-            var isHomePressed = isPressed(VK_HOME);
-            if (homeWasPressed == true && isHomePressed == false)
-            {
-                FocusOnForm();
-            }
-            homeWasPressed = isHomePressed;
-        }
-
-#endregion
+        public override void OnFocusOnFormReleased() { this.Activate(); }
     }
 }
