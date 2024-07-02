@@ -1,8 +1,16 @@
 # DeathTracker-SoulsGames
 A simple death tracker for souls games. It has shortcuts so you can easily count more deaths, and separate the counter per different areas or bosses.
 
-You can use Page Up to add deaths, and Page Down to remove if you added by accident.
+## How to execute?
+Download the DeathCounter.exe and execute it. (preferably in a folder, because files will be created to log your deaths)
 
-If you change the Area Name your counter will be divided into the total death counter, and the area (or boss fight) counter.
+## How it works?
+Type the area or boss you are in to keep a separated track of your total deaths and the deaths in the specific area you are on.
 
-Press home to force focus on the app form.
+- Press Page Up to increase your death counter.
+- Press Page Down to decrease your death counter.
+
+- If you need to change your area or boss name, press home to force focus into the app window.
+
+## Future work
+I still want to create a page with graphs and more info on your deaths per area/boss.
