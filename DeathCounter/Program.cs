@@ -1,4 +1,4 @@
-namespace WinFormsApp1
+namespace DeathCounterApp
 {
     internal static class Program
     {

@@ -1,12 +1,17 @@
 using DeathCounter;
+using DeathCounter.Properties;
+using System.Xml.Linq;
 
-namespace WinFormsApp1
+namespace DeathCounterApp
 {
     public partial class DeathCounter : ShortcutHandler
     {
         private FileHandler _deathLogFileHandler;
+        private FileHandler _areaNameFileHandler;
 
-        private string filePath = "DeathLog.txt";
+        private string filePath = "DeathCounterLogFiles";
+        private string deathLogFileName = "DeathLog.txt";
+        private string areaNameFileName = "AreaNames.txt";
 
         private int totalDeathCount = 0;
         private int totalAreaDeathCount = 0;
@@ -16,38 +21,50 @@ namespace WinFormsApp1
         private readonly string REASON_REMOVING_DEATH = "Removing Death";
         private readonly string REASON_CHANGING_AREA_NAME = "Changing Area";
 
+        private AutoCompleteStringCollection autoCompleteStringCollection = new AutoCompleteStringCollection();
+
         public DeathCounter()
         {
             InitializeComponent();
-            _deathLogFileHandler = new FileHandler($"{Application.StartupPath}{filePath}");
+            _deathLogFileHandler = new FileHandler($"{Application.StartupPath}{filePath}/{deathLogFileName}");
             _deathLogFileHandler.Create();
+
+            _areaNameFileHandler = new FileHandler($"{Application.StartupPath}{filePath}/{areaNameFileName}");
+            if (!_areaNameFileHandler.Exists()) SeedAreaNameFile();
+
             this.Location = Screen.AllScreens[1].WorkingArea.Location;
 
             selectedArea = _deathLogFileHandler.ReadAllLines().LastOrDefault()?.Split('|')?[1]?.Trim();
             if (string.IsNullOrWhiteSpace(selectedArea)) selectedArea = "No area selected";
 
-            tb_AreaName.Text = selectedArea;
             int.TryParse(_deathLogFileHandler.ReadAllLines().LastOrDefault()?.Split('|')?[2]?.Trim(), out totalAreaDeathCount);
             int.TryParse(_deathLogFileHandler.ReadAllLines().LastOrDefault()?.Split('|')?[3]?.Trim(), out totalDeathCount);
 
+            UpdateCbSource();
             UpdateDeaths();
+            cb_areaName.Enabled = false;
         }
 
         private void setAreaName(object sender, EventArgs e)
         {
-            if (tb_AreaName.Enabled == false)
+            if (cb_areaName.Enabled == false)
             {
-                tb_AreaName.Enabled = true;
-                tb_AreaName.Focus();
+                cb_areaName.Enabled = true;
+                cb_areaName.Focus();
             }
             else
             {
-                selectedArea = tb_AreaName.Text;
+                selectedArea = cb_areaName.Text;
 
                 int.TryParse(_deathLogFileHandler.ReadAllLines()?.LastOrDefault(x => x.Split('|')[1].Trim() == selectedArea)?.Split('|')[2]?.Trim(), out totalAreaDeathCount);
                 _deathLogFileHandler.WriteLine($"{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} | {selectedArea} | {totalAreaDeathCount} | {totalDeathCount} | {REASON_CHANGING_AREA_NAME}");
 
-                tb_AreaName.Enabled = false;
+                if (_areaNameFileHandler.ReadAllLines().FirstOrDefault(x => x == selectedArea) == null) { 
+                    _areaNameFileHandler.WriteLine(selectedArea);
+                    UpdateCbSource();
+                }
+
+                cb_areaName.Enabled = false;
                 btn_cgAreaName.Focus();
                 UpdateDeaths();
             }
@@ -80,9 +97,23 @@ namespace WinFormsApp1
             lbl_totalDeaths.Text = totalDeathCount.ToString();
         }
 
+        private void UpdateCbSource()
+        {
+            autoCompleteStringCollection = new AutoCompleteStringCollection();
+            autoCompleteStringCollection.AddRange(_areaNameFileHandler.ReadAllLines().ToArray());
+            cb_areaName.AutoCompleteCustomSource = autoCompleteStringCollection;
+            cb_areaName.Text = selectedArea;
+            cb_areaName.Update();
+        }
+
+        private void SeedAreaNameFile()
+        {
+            _areaNameFileHandler.WriteLine(Resources.AreaNames);
+        }
+
         public override void OnAddDeathReleased() { AddDeath(); }
 
-        public override void OnRemoveDeathReleased () { RemoveDeath(); }
+        public override void OnRemoveDeathReleased() { RemoveDeath(); }
 
         public override void OnFocusOnFormReleased() { this.Activate(); }
     }

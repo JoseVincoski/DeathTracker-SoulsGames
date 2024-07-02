@@ -1,4 +1,4 @@
-﻿namespace WinFormsApp1
+﻿namespace DeathCounterApp
 {
     partial class DeathCounter
     {
@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            tb_AreaName = new TextBox();
             btn_cgAreaName = new Button();
             lbl_AreaDeaths = new Label();
             button1 = new Button();
@@ -36,18 +35,8 @@
             label2 = new Label();
             label3 = new Label();
             lbl_totalDeaths = new Label();
+            cb_areaName = new ComboBox();
             SuspendLayout();
-            // 
-            // tb_AreaName
-            // 
-            tb_AreaName.Enabled = false;
-            tb_AreaName.Font = new Font("Segoe UI", 12F);
-            tb_AreaName.Location = new Point(7, 41);
-            tb_AreaName.Name = "tb_AreaName";
-            tb_AreaName.Size = new Size(350, 29);
-            tb_AreaName.TabIndex = 2;
-            tb_AreaName.TextAlign = HorizontalAlignment.Center;
-            tb_AreaName.KeyPress += onTextBoxKeyPress;
             // 
             // btn_cgAreaName
             // 
@@ -121,18 +110,31 @@
             lbl_totalDeaths.Text = "0";
             lbl_totalDeaths.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // cb_areaName
+            // 
+            cb_areaName.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cb_areaName.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            cb_areaName.Font = new Font("Segoe UI", 12F);
+            cb_areaName.FormattingEnabled = true;
+            cb_areaName.ImeMode = ImeMode.On;
+            cb_areaName.Location = new Point(7, 41);
+            cb_areaName.Name = "cb_areaName";
+            cb_areaName.Size = new Size(350, 29);
+            cb_areaName.TabIndex = 2;
+            cb_areaName.KeyPress += onTextBoxKeyPress;
+            // 
             // DeathCounter
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(364, 188);
+            ClientSize = new Size(364, 187);
+            Controls.Add(cb_areaName);
             Controls.Add(lbl_totalDeaths);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(lbl_AreaDeaths);
-            Controls.Add(tb_AreaName);
             Controls.Add(btn_cgAreaName);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
@@ -142,13 +144,11 @@
             StartPosition = FormStartPosition.Manual;
             Text = "Death Tracker";
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
         private Label lblAreaName;
-        private TextBox tb_AreaName;
         private Button btn_cgAreaName;
         private Panel panel1;
         private Label lbl_AreaDeaths;
@@ -157,5 +157,6 @@
         private Label label2;
         private Label label3;
         private Label lbl_totalDeaths;
+        private ComboBox cb_areaName;
     }
 }

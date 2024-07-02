@@ -47,7 +47,6 @@
         {
             File.Delete(_filePath);
         }
-        catch (Exception)
-        {}
+        catch (Exception) {}
     }
 }
